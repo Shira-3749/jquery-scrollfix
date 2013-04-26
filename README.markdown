@@ -117,3 +117,17 @@ See [demo.html](demo.html) for an example.
     </tr>
   </tbody>
 </table>
+
+## Events
+
+### jquery.scrollfix
+
+This event is triggered on the element when its state changes and allows other logic to react to it accordingly.
+
+    $(elementSelector).bind('jquery.scrollfix', function (e, fixed) {
+        if (fixed) {
+            // element was just fixed
+        } else {
+            // element was just unfixed
+        }
+    });

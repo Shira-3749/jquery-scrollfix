@@ -78,6 +78,7 @@ void function ($) {
                         $(element)
                             .css('width', elementOrigWidth)
                             .removeClass(options.elementFixClass)
+                            .trigger('jquery.scrollfix', [fixing])
                         ;
                         if (options.containerFixClass) {
                             $(container).removeClass(options.containerFixClass);
@@ -90,6 +91,7 @@ void function ($) {
                     $(element)
                         .css('width', $(element).width())
                         .addClass(options.elementFixClass)
+                        .trigger('jquery.scrollfix', [fixing])
                     ;
                     if (options.containerFixClass) {
                         $(container).addClass(options.containerFixClass);
