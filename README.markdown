@@ -12,7 +12,7 @@ The plugin provides single jQuery method you can use.
 
 ### `$(containerSelector).scrollFix(elementSelector, options);`
 
-Custom CSS is required for this to have effect:
+## Required CSS
 
     /* Make the element fixed when it has the scroll-fix class */
     elementSelector.scroll-fix {
