@@ -20,9 +20,11 @@ Custom CSS is required for this to have effect:
         top: 0;
     }
 
-    /* Fill empty space left after the element in the container when it is positioned */
-    /* Setting the option autoElementSubstitute to true can be used instead (see options below) */
     containerSelector.scroll-fix {
+        position: relative; /* required!! */
+
+        /* Fill empty space left after the element in the container when it is positioned */
+        /* Setting the option autoElementSubstitute to true can be used instead (see options below) */
         height: <insert value here>px;
     }
 
