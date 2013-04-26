@@ -42,8 +42,6 @@ void function ($) {
 
         this.each(function () {
 
-            console.log(this);
-
             var
                 container = this,
                 scroller = $(options.scroller),
