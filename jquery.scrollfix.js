@@ -91,7 +91,7 @@ void function ($) {
                 } else if (scrollerTop > getElementY(element, options.scroller) + options.fixBoundaryOffset) {
                     fixing = true;
                     elementOrigWidth = element.style.width;
-                    elementContainerOffset = getElementY(element, container);
+                    elementContainerOffset = ((element.offsetParent === container) ? getElementY(element, container) : 0);
                     if (options.autoElementSubstitute) {
                         if (null === elementSubstitute) {
                             elementSubstitute = document.createElement('div');
