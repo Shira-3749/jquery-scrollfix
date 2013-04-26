@@ -37,7 +37,7 @@ void function ($) {
      * @return object
      */
     $.fn.scrollFix = function (element, options) {
-        
+
         options = $.extend({}, $.fn.scrollFix.defaults, options);
 
         this.each(function () {
@@ -45,6 +45,7 @@ void function ($) {
             var
                 container = this,
                 scroller = $(options.scroller),
+                elementSubstitute = null,
                 elementContainerOffset,
                 elementOrigWidth,
                 fixing = false
@@ -75,6 +76,9 @@ void function ($) {
                 if (fixing) {
                     if (scrollerTop <= getElementY(container) + elementContainerOffset + options.unfixBoundaryOffset) {
                         fixing = false;
+                        if (options.autoElementSubstitute) {
+                            elementSubstitute.style.display = 'none';
+                        }
                         $(element)
                             .css('width', elementOrigWidth)
                             .removeClass(options.elementFixClass)
@@ -88,6 +92,17 @@ void function ($) {
                     fixing = true;
                     elementOrigWidth = element.style.width;
                     elementContainerOffset = getElementY(element, container);
+                    if (options.autoElementSubstitute) {
+                        if (null === elementSubstitute) {
+                            elementSubstitute = document.createElement('div');
+                            elementSubstitute.className = 'jquery-scrollfix-substitute';
+                            elementSubstitute.style.width = $(element).outerWidth() + 'px';
+                            elementSubstitute.style.height = $(element).outerHeight() + 'px';
+                            elementSubstitute = $(elementSubstitute).insertAfter(element).get(0);
+                        } else {
+                            elementSubstitute.style.display = 'block';
+                        }
+                    }
                     $(element)
                         .css('width', $(element).width())
                         .addClass(options.elementFixClass)
@@ -117,7 +132,8 @@ void function ($) {
         containerFixClass: 'scroll-fix',
         elementFixClass: 'scroll-fix',
         fixBoundaryOffset: 0,
-        unfixBoundaryOffset: 0
+        unfixBoundaryOffset: 0,
+        autoElementSubstitute: false
     };
 
 }(jQuery);

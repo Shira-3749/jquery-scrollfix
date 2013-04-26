@@ -14,13 +14,16 @@ The plugin provides single jQuery method you can use.
 
 Custom CSS is required for this to have effect:
 
-    containerSelector.scroll-fix {
-        height: <insert value here>px; /* Ensure that the container has height when the element is fixed */
-    }
-
+    /* Make the element fixed when it has the scroll-fix class */
     elementSelector.scroll-fix {
         position: fixed;
         top: 0;
+    }
+
+    /* Fill empty space left after the element in the container when it is positioned */
+    /* Setting the option autoElementSubstitute to true can be used instead (see options below) */
+    containerSelector.scroll-fix {
+        height: <insert value here>px;
     }
 
 See [demo.html](demo.html) for an example.
@@ -57,6 +60,20 @@ See [demo.html](demo.html) for an example.
       
       <td>
         element to watch for scrolling events
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        autoElementSubstitute
+      </th>
+      
+      <td>
+        false
+      </td>
+      
+      <td>
+        if set to true, a div with element's dimensions will be created to fill the space when the element is fixed
       </td>
     </tr>
 
