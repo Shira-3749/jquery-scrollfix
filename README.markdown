@@ -21,11 +21,11 @@ The plugin provides single jQuery method you can use.
     }
 
     containerSelector.scroll-fix {
-        position: relative; /* required!! */
-
         /* Fill empty space left after the element in the container when it is positioned */
         /* Setting the option autoElementSubstitute to true can be used instead (see options below) */
         height: <insert value here>px;
+
+        /* Note: using position: relative; here may break it for MSIE7 */
     }
 
 See [demo.html](demo.html) for an example.
