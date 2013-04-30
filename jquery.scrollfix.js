@@ -198,6 +198,7 @@ void function ($) {
                     .css('width', elementInitialWidth)
                     .addClass(options.elementFixClass)
                 ;
+                updateLeftPosition();
 
                 // update container
                 if (options.containerFixClass) {
@@ -241,9 +242,9 @@ void function ($) {
          */
         function updateLeftPosition()
         {
-            var leftPosition = -scroller.scrollLeft() + scrollerInitialScrollLeft;
+            var leftPosition = -scroller.scrollLeft();
             if (outerContainer) {
-                // use outer  countainer
+                // use outer container
                 leftPosition += getElementX(outerContainerElem) + elementInitialLeftOffset;
             } else if(elementSubstitute) {
                 // use element's substitute
