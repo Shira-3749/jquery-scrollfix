@@ -8,7 +8,7 @@ See [demo.html](demo.html) for an example.
 
 - adding a CSS class when the element is supposed to be fixed (its top coordinate is less than the current scroll position)
 - positioning the fixed element correctly even if scrolling horizontally
-- resizing the fixed element if needed (the `outerContainer` option)
+- resizing the fixed element if needed
 
 ## Browser support
 
@@ -52,19 +52,13 @@ Example:
         top: 0;
     }
 
-    containerSelector.scroll-fix {
-        /* Fill empty space left after the element in the container when it is positioned */
-        /* Setting the option autoElementSubstitute to true can be used instead (see options below) */
-        height: <insert value here>px;
-    }
-
 ## Return value
 
 The `$().scrollFix()` call returns an object with following methods:
 
-- **update()** - perform scroll position check and update the element
-- **updateScroll()** - perform scroll position check and update the element if necessary
-- **updateSize()** - update the element
+- **update()** - update element's state and dimensions
+- **updateState()** - update element's state
+- **updateDimensions()** - update element's dimensions
 
 ## Options
 
@@ -85,15 +79,15 @@ The `$().scrollFix()` call returns an object with following methods:
     </tr>
 
     <tr>
-      <th>autoElementSubstitute</th>
-      <td>false</td>
-      <td>If set to true, a div with element's dimensions will be created to fill the space when the element is fixed.</td>
+      <th>elementSubstitute</th>
+      <td>true</td>
+      <td>Create invisible clone of the element to fill the space when the element is fixed.</td>
     </tr>
 
     <tr>
       <th>outerContainer</th>
       <td>null</td>
-      <td>Element used to determine correct position and width of the fixed element (<code>body</code> can be used too).</td>
+      <td>Element used to determine correct position of the fixed element (<code>body</code> can be used too).</td>
     </tr>
 
     <tr>
@@ -118,6 +112,12 @@ The `$().scrollFix()` call returns an object with following methods:
       <th>unfixBoundaryOffset</th>
       <td>0</td>
       <td>Offset aplied when detecting whether to unfix the element.</td>
+    </tr>
+
+    <tr>
+      <th>updateWidth</th>
+      <td>true</td>
+      <td>Update element's width dynamically (requires <strong>elementSubstitute</strong> to be enabled).</td>
     </tr>
 
     <tr>

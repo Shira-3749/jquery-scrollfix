@@ -74,13 +74,16 @@ void function ($) {
             throw new Error('Custom scrollers are not yet supported');
         }
 
+        if (options.updateWidth && !options.elementSubstitute) {
+            throw new Error('The option "updateWidth" requires "elementSubstitute" to be enabled as well');
+        }
+
         var
             container = this.get(0),
             scroller = $(options.scroller),
             scrollerInitialScrollLeft,
             outerContainer = null,
             outerContainerElem,
-            outerContainerInitialWidth,
             elementSubstitute = null,
             elementContainerOffset,
             elementOrigWidth,
@@ -117,9 +120,9 @@ void function ($) {
         }
 
         /**
-         * Update element according to current scroll offset
+         * Update state of the element
          */
-        function onScroll()
+        function updateState()
         {
             var scrollerTop = scroller.scrollTop();
             if (fixing) {
@@ -129,7 +132,7 @@ void function ($) {
                     fixing = false;
 
                     // hide substitute
-                    if (options.autoElementSubstitute) {
+                    if (options.elementSubstitute) {
                         elementSubstitute.style.display = 'none';
                     }
 
@@ -164,11 +167,8 @@ void function ($) {
                 elementOrigWidth = element.style.width;
                 elementOrigLeftPosition = element.style.left;
                 elementInitialWidth = $(element).width();
-                if (outerContainer) {
-                    scrollerInitialScrollLeft = scroller.scrollLeft();
-                    elementInitialLeftOffset = getElementX(element) - getElementX(outerContainerElem) - scrollerInitialScrollLeft;
-                    outerContainerInitialWidth = outerContainer.width();
-                }
+                scrollerInitialScrollLeft = scroller.scrollLeft();
+                elementInitialLeftOffset = getElementX(element) - (outerContainer ? getElementX(outerContainerElem) : 0) - scrollerInitialScrollLeft;
                 if (element.offsetParent === container) {
                     elementContainerOffset = getElementY(element, container);
                 } else {
@@ -176,15 +176,20 @@ void function ($) {
                 }
 
                 // create/enable substitute
-                if (options.autoElementSubstitute) {
+                if (options.elementSubstitute) {
                     if (null === elementSubstitute) {
-                        elementSubstitute = document.createElement('div');
-                        elementSubstitute.className = 'jquery-scrollfix-substitute';
-                        elementSubstitute.style.width = $(element).outerWidth() + 'px';
-                        elementSubstitute.style.height = $(element).outerHeight() + 'px';
-                        elementSubstitute = $(elementSubstitute).insertAfter(element).get(0);
+                        elementSubstitute = element.cloneNode(false);
+                        elementSubstitute.style.visibility = 'hidden';
+                        elementSubstitute = $(elementSubstitute)
+                            .insertAfter(element)
+                            .addClass('jquery-scrollfix-substitute')
+                            .get(0)
+                        ;
                     } else {
                         elementSubstitute.style.display = 'block';
+                    }
+                    if ($(elementSubstitute).height() !== $(element).height()) {
+                        $(elementSubstitute).height($(element).height());
                     }
                 }
 
@@ -208,24 +213,26 @@ void function ($) {
         }
 
         /**
-         * Update element according to current scroller size
+         * Update dimensions of the element
          */
-        function onResize()
+        function updateDimensions()
         {
             if (fixing) {
+
                 // update element width
-                $(element).css(
-                    'width',
-                    (elementInitialWidth + outerContainer.width() - outerContainerInitialWidth) + 'px'
-                );
+                if (options.updateWidth) {
+                    $(element).css(
+                        'width',
+                        $(elementSubstitute).width() + 'px'
+                    );
+                    if (options.onResize) {
+                        options.onResize(element);
+                    }
+                }
 
                 // update left position
                 updateLeftPosition();
 
-                // callback
-                if (options.onResize) {
-                    options.onResize(element);
-                }
             }
         }
 
@@ -234,43 +241,43 @@ void function ($) {
          */
         function updateLeftPosition()
         {
-            $(element).css(
-                'left',
-                ((outerContainer ? getElementX(outerContainerElem) : 0) + elementInitialLeftOffset - (scroller.scrollLeft() - scrollerInitialScrollLeft)) + 'px'
-            );
+            var leftPosition = -scroller.scrollLeft() + scrollerInitialScrollLeft;
+            if (outerContainer) {
+                // use outer  countainer
+                leftPosition += getElementX(outerContainerElem) + elementInitialLeftOffset;
+            } else if(elementSubstitute) {
+                // use element's substitute
+                leftPosition += getElementX(elementSubstitute);
+            } else {
+                // offset only
+                leftPosition += elementInitialLeftOffset;
+            }
+            $(element).css('left', leftPosition + 'px');
         }
 
-        // bind to the scroll event
-        $(options.scroller).scroll(onScroll);
+        // bind to events
+        $(options.scroller)
+            .scroll(updateState)
+            .resize(updateDimensions)
+        ;
 
-        // bind to the resize event
-        if (outerContainer) {
-            $(options.scroller).resize(onResize);
-        }
-
-        // initial updates
-        onScroll();
-        if (outerContainer) {
-            onResize();
-        }
+        // initial update
+        updateState();
+        updateDimensions();
 
         // return controller object
         return {
             update: function () {
-                onScroll();
-                if (outerContainer) {
-                    onResize();
-                }
+                updateState();
+                updateDimensions();
                 return this;
             },
-            updateScroll: function () {
-                onScroll();
+            updateState: function () {
+                updateState();
                 return this;
             },
-            updateSize: function () {
-                if (outerContainer) {
-                    onResize();
-                }
+            updateDimensions: function () {
+                updateDimensions();
                 return this;
             }
         };
@@ -282,10 +289,11 @@ void function ($) {
         scroller: window,
         containerFixClass: 'scroll-fix',
         elementFixClass: 'scroll-fix',
+        elementSubstitute: true,
         fixBoundaryOffset: 0,
         unfixBoundaryOffset: 0,
-        autoElementSubstitute: false,
         outerContainer: null,
+        updateWidth: true,
         onResize: null
     };
 
