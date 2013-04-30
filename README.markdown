@@ -1,16 +1,48 @@
-# jQuery ScrollFix 1.0
+# jQuery ScrollFix 1.1
 
-jQuery plugin to fix an element based on current scrolling position of the page.
+jQuery plugin to fix an element based on current scrolling position of the page when simple `position: fixed` is not enough.
+
+See [demo.html](demo.html) for an example.
+
+## Functionality
+
+- adding a CSS class when the element is supposed to be fixed (it's top coordinate is less than the current scroll position)
+- positioning the fixed element correctly even if scrolling horizontally
+- resizing the fixed element if needed (the `outerContainer` option)
 
 ## Browser support
 
-Tested in Firefox, Google Chrome, Safari, Opera and MSIE 7+
+Tested in Mozilla Firefox, Google Chrome, Safari, Opera and MSIE 7+
+
+## Known limitations
+
+- custom "scrollers" (e.g. a `div` with `overflow: scroll`) are not supported (yet)
+
+
+----------
+
 
 ## Usage
 
 The plugin provides single jQuery method you can use.
 
-### `$(containerSelector).scrollFix(elementSelector, options);`
+### `$(container).scrollFix(element, options);`
+
+- **container** - selector of or element that contains the fixed element
+- **element** - selector of element inside the container that will be fixed
+- **options** - object with various settings (optional)
+
+This method can be called as soon as the given elements exist but usage of `$(document).ready()` is recommended.
+
+## Required HTML
+
+Example:
+
+    <div id="fixed-container">
+        <div id="fixed-element">
+            Lorem ipsum
+        </div>
+    </div>
 
 ## Required CSS
 
@@ -24,129 +56,74 @@ The plugin provides single jQuery method you can use.
         /* Fill empty space left after the element in the container when it is positioned */
         /* Setting the option autoElementSubstitute to true can be used instead (see options below) */
         height: <insert value here>px;
-
-        /* Note: using position: relative; here may break it for MSIE7 */
     }
 
-See [demo.html](demo.html) for an example.
+## Return value
 
+The `$().scrollFix()` call returns an object with following methods:
 
+- **update()** - perform scroll position check and update the element
+- **updateScroll()** - perform scroll position check and update the element if necessary
+- **updateSize()** - update the element
 ## Options
 
 <table>
   <thead>
     <tr>
-      <th>
-        Name
-      </th>
-      
-      <th>
-        Default
-      </th>
-      
-      <th>
-        Description
-      </th>
+      <th>Name</th>
+      <th>Default</th>
+      <th>Description</th>
     </tr>
   </thead>
   
   <tbody>
     <tr>
-      <th>
-        scroller
-      </th>
-      
-      <td>
-        window
-      </td>
-      
-      <td>
-        element to watch for scrolling events
-      </td>
+      <th>scroller</th>
+      <td>window</td>
+      <td>element to watch for scrolling events, only <code>window</code> is supported now</td>
     </tr>
 
     <tr>
-      <th>
-        autoElementSubstitute
-      </th>
-      
-      <td>
-        false
-      </td>
-      
-      <td>
-        if set to true, a div with element's dimensions will be created to fill the space when the element is fixed
-      </td>
+      <th>autoElementSubstitute</th>
+      <td>false</td>
+      <td>if set to true, a div with element's dimensions will be created to fill the space when the element is fixed</td>
     </tr>
 
     <tr>
-      <th>
-        elementFixClass
-      </th>
-      
-      <td>
-        scroll-fix
-      </td>
-      
-      <td>
-        class added to the element when it is supposed to be fixed
-      </td>
+      <th>outerContainer</th>
+      <td>null</td>
+      <td>element used to determine correct position and width of the fixed element (<code>body</code> can be used too)</td>
     </tr>
 
     <tr>
-      <th>
-        containerFixClass
-      </th>
-      
-      <td>
-        scroll-fix
-      </td>
-      
-      <td>
-        class added to the element's container when it is fixed
-      </td>
+      <th>elementFixClass</th>
+      <td>scroll-fix</td>
+      <td>class added to the element when it is supposed to be fixed</td>
     </tr>
 
     <tr>
-      <th>
-        fixBoundaryOffset
-      </th>
-      
-      <td>
-        0
-      </td>
-      
-      <td>
-        offset aplied when detecting whether to fix the element
-      </td>
+      <th>containerFixClass</th>
+      <td>scroll-fix</td>
+      <td>class added to the element's container when it is fixed</td>
     </tr>
 
     <tr>
-      <th>
-        unfixBoundaryOffset
-      </th>
-      
-      <td>
-        0
-      </td>
-      
-      <td>
-        offset aplied when detecting whether to unfix the element
-      </td>
+      <th>fixBoundaryOffset</th>
+      <td>0</td>
+      <td>offset aplied when detecting whether to fix the element</td>
+    </tr>
+
+    <tr>
+      <th>unfixBoundaryOffset</th>
+      <td>0</td>
+      <td>offset aplied when detecting whether to unfix the element</td>
+    </tr>
+
+    <tr>
+      <th>onResize</th>
+      <td>null</td>
+      <td>custom function to call when the fixed element is resized</td>
     </tr>
   </tbody>
 </table>
 
-## Events
-
-### jquery.scrollfix
-
-This event is triggered on the element when its state changes and allows other logic to react to it accordingly.
-
-    $(elementSelector).bind('jquery.scrollfix', function (e, fixed) {
-        if (fixed) {
-            // element was just fixed
-        } else {
-            // element was just unfixed
-        }
-    });

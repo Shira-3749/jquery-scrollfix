@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>jQuery ScrollFix 1.0</title>
+<title>jQuery ScrollFix 1.1</title>
 <style type="text/css">
 body {font-family: sans-serif;}
 h1 {margin-top: 0; font-size: 2em;}
@@ -42,13 +42,13 @@ p {margin: 1em 0; padding: 0.5em; background-color: #eee;}
 <p>Tempus ridiculus et Nullam tincidunt laoreet Maecenas et ante Pellentesque non. Dictum consequat lobortis ipsum nulla ut id lacus ut justo dui. Eget convallis Vivamus Maecenas Pellentesque Integer ornare at lorem justo nulla. Rutrum porttitor purus a gravida non nibh Morbi felis penatibus massa. Dolor tincidunt id sodales euismod ut sodales turpis In justo Nam. Est lacus laoreet Cras pharetra sit eros non lobortis Curabitur Vestibulum. Elit odio dictumst urna eleifend eget ipsum feugiat In turpis quis. Pellentesque Sed vitae wisi elit eget amet Vestibulum neque eleifend Ut. Elit hendrerit turpis ut Curabitur Pellentesque convallis vel et justo enim. Urna laoreet dui lobortis volutpat lorem augue Sed faucibus euismod fringilla. Nibh ut venenatis sed a urna lacinia amet netus interdum mauris. Semper congue a urna et feugiat dui lacus tellus tempus est. Curabitur vel Maecenas nisl nibh nibh id lorem eros dolor justo. Elit In sodales dolor convallis purus sem et et neque lacinia. Magna egestas quis Integer nec lacinia Sed pretium senectus quis fames. Ac accumsan wisi vitae tempor sapien augue tristique enim convallis accumsan. Amet eget Curabitur orci nibh nibh nulla ornare mollis Cum lorem. Consectetuer arcu interdum quis et elit nibh et massa Nam in. Ut sapien faucibus elit lacinia adipiscing orci justo adipiscing Nam dui. Et id accumsan nascetur Suspendisse eget felis dictum elit massa vel. Eget neque urna vitae Vivamus Quisque est massa urna elit magnis. Dictum lacus rutrum Cras pretium pretium libero nibh Lorem pellentesque amet. Id non Aenean justo laoreet natoque turpis euismod nunc sagittis metus. Vel et venenatis Phasellus at habitasse gravida nascetur condimentum pede felis. Arcu hendrerit sem et adipiscing condimentum quis et odio fringilla enim. Lorem tincidunt consectetuer Nam egestas semper eget pede aliquet est ut. Vitae venenatis urna accumsan et Pellentesque id sodales leo fringilla et. Ante nec sapien ut nunc vel et dignissim condimentum Aliquam porttitor. Euismod interdum Nam a id justo Quisque ante orci Suspendisse mauris. Amet Aenean Sed consequat nibh nulla Praesent malesuada tellus Nulla risus. Dapibus tellus ac arcu netus sed laoreet vitae pharetra Nulla ligula. Sit egestas pede nunc Maecenas malesuada nec turpis pretium tortor Curabitur. Enim Suspendisse quam ante Vivamus id condimentum sapien turpis ipsum consequat. Enim et amet Proin vel interdum nunc pretium a at semper. Neque pellentesque Curabitur nibh Curabitur Curabitur condimentum semper amet netus Donec. Vivamus et at velit accumsan ante Nunc semper hendrerit sit Pellentesque. </p>
 
 
-
 <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 <script type="text/javascript" src="jquery.scrollfix.js"></script>
 
 <script type="text/javascript">
 $('#bar-container').scrollFix('#bar', {
-    autoElementSubstitute: true
+    autoElementSubstitute: true,
+    outerContainer: 'body'
 });
 </script>
 
