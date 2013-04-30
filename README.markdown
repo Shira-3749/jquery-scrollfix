@@ -65,6 +65,7 @@ The `$().scrollFix()` call returns an object with following methods:
 - **update()** - perform scroll position check and update the element
 - **updateScroll()** - perform scroll position check and update the element if necessary
 - **updateSize()** - update the element
+
 ## Options
 
 <table>
@@ -80,49 +81,49 @@ The `$().scrollFix()` call returns an object with following methods:
     <tr>
       <th>scroller</th>
       <td>window</td>
-      <td>element to watch for scrolling events, only <code>window</code> is supported now</td>
+      <td>Element to watch for scrolling events, only <code>window</code> is supported now.</td>
     </tr>
 
     <tr>
       <th>autoElementSubstitute</th>
       <td>false</td>
-      <td>if set to true, a div with element's dimensions will be created to fill the space when the element is fixed</td>
+      <td>If set to true, a div with element's dimensions will be created to fill the space when the element is fixed.</td>
     </tr>
 
     <tr>
       <th>outerContainer</th>
       <td>null</td>
-      <td>element used to determine correct position and width of the fixed element (<code>body</code> can be used too)</td>
+      <td>Element used to determine correct position and width of the fixed element (<code>body</code> can be used too).</td>
     </tr>
 
     <tr>
       <th>elementFixClass</th>
       <td>scroll-fix</td>
-      <td>class added to the element when it is supposed to be fixed</td>
+      <td>Class added to the element when it is supposed to be fixed.</td>
     </tr>
 
     <tr>
       <th>containerFixClass</th>
       <td>scroll-fix</td>
-      <td>class added to the element's container when it is fixed</td>
+      <td>Class added to the element's container when it is fixed.</td>
     </tr>
 
     <tr>
       <th>fixBoundaryOffset</th>
       <td>0</td>
-      <td>offset aplied when detecting whether to fix the element</td>
+      <td>Offset aplied when detecting whether to fix the element.</td>
     </tr>
 
     <tr>
       <th>unfixBoundaryOffset</th>
       <td>0</td>
-      <td>offset aplied when detecting whether to unfix the element</td>
+      <td>Offset aplied when detecting whether to unfix the element.</td>
     </tr>
 
     <tr>
       <th>onResize</th>
       <td>null</td>
-      <td>custom function to call when the fixed element is resized</td>
+      <td>Custom function to call when the fixed element is resized.</td>
     </tr>
   </tbody>
 </table>
