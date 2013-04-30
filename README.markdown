@@ -6,7 +6,7 @@ See [demo.html](demo.html) for an example.
 
 ## Functionality
 
-- adding a CSS class when the element is supposed to be fixed (it's top coordinate is less than the current scroll position)
+- adding a CSS class when the element is supposed to be fixed (its top coordinate is less than the current scroll position)
 - positioning the fixed element correctly even if scrolling horizontally
 - resizing the fixed element if needed (the `outerContainer` option)
 
