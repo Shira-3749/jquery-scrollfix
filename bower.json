@@ -1,0 +1,21 @@
+{
+    "name": "jquery-scrollfix",
+    "description": "jQuery plugin to fix an element based on current scrolling position of the page when simple position: fixed is not enough.",
+    "version": "1.0.0",
+    "keywords": [
+        "js",
+        "jquery",
+        "scroll",
+        "fix"
+    ],
+    "main": [
+        "src/jquery.scrollfix.js"
+    ],
+    "ignore": [
+        ".*",
+        "src/demo.html"
+    ],
+    "dependencies": {
+        "jquery": ">= 1.9.0"
+    }
+}

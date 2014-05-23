@@ -1,4 +1,4 @@
-# jQuery ScrollFix 1.1
+# jQuery ScrollFix
 
 jQuery plugin to fix an element based on current scrolling position of the page when simple `position: fixed` is not enough.
 
@@ -16,7 +16,7 @@ Tested in Mozilla Firefox, Google Chrome, Safari, Opera and MSIE 7+
 
 ## Known limitations
 
-- custom "scrollers" (e.g. a `div` with `overflow: scroll`) are not supported (yet)
+- custom "scrollers" (e.g. a `div` with `overflow: scroll`) are not supported
 
 
 ----------
@@ -70,7 +70,7 @@ The `$().scrollFix()` call returns an object with following methods:
       <th>Description</th>
     </tr>
   </thead>
-  
+
   <tbody>
     <tr>
       <th>scroller</th>
