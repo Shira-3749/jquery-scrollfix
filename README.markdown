@@ -2,7 +2,7 @@
 
 jQuery plugin to fix an element based on current scrolling position of the page when simple `position: fixed` is not enough.
 
-See [demo.html](demo.html) for an example.
+See `demo.html` for an example.
 
 ## Functionality
 
