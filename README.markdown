@@ -11,7 +11,7 @@ See `demo.html` for an example.
 ## Features
 
 - detecting when an element goes out of view and making it fixed
-- replacing the element with an invisible clone that will temporarily occupy space the original spot
+- replacing the element with an invisible clone that will temporarily occupy the original spot
 - updating size and position of the fixed element
 
 
@@ -56,7 +56,7 @@ The plugin provides a single jQuery method you can use:
         </tr>
         <tr>
             <th>syncPosition</th>
-            <td>0</td>
+            <td>true</td>
             <td>Update element's position when it is fixed.</td>
         </tr>
         <tr>
