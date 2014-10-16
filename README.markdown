@@ -50,14 +50,9 @@ The plugin provides a single jQuery method you can use:
             <td>Class added to the element when it is fixed.</td>
         </tr>
         <tr>
-            <th>syncSize</th>
-            <td>true</td>
-            <td>Update element's size when it is fixed.</td>
-        </tr>
-        <tr>
-            <th>syncPosition</th>
-            <td>true</td>
-            <td>Update element's position when it is fixed.</td>
+            <th>fixTop</th>
+            <td>0</td>
+            <td>Top offset of the fixed element.</td>
         </tr>
         <tr>
             <th>fixOffset</th>
@@ -68,6 +63,21 @@ The plugin provides a single jQuery method you can use:
             <th>unfixOffset</th>
             <td>0</td>
             <td>Offset aplied when detecting whether to unfix the element.</td>
+        </tr>
+        <tr>
+            <th>syncSize</th>
+            <td>true</td>
+            <td>Update element's size when it is fixed.</td>
+        </tr>
+        <tr>
+            <th>syncPosition</th>
+            <td>true</td>
+            <td>Update element's position when it is fixed.</td>
+        </tr>
+        <tr>
+            <th>style</th>
+            <td>true</td>
+            <td>Apply <code>position: fixed</code> and <code>top: ..px</code> directly to the element when it is fixed. Disable this if you wish to style the element through your own CSS rules using the <strong>fixClass</strong> (example: <code>#myElement.scroll-fix {position: fixed;}</code>).</td>
         </tr>
         <tr>
             <th>onUpdateFixed</th>

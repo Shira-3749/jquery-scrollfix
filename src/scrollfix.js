@@ -15,13 +15,14 @@ var Shira;
         };
 
         ScrollFix.Watcher.defaults = {
-            syncSize: true,
-            syncPosition: true,
             fixClass: 'scroll-fix',
             fixTop: 0,
             fixOffset: 0,
             unfixOffset: 0,
-            onUpdateFixed: null
+            onUpdateFixed: null,
+            syncSize: true,
+            syncPosition: true,
+            style: true
         };
 
         ScrollFix.Watcher.prototype = {
@@ -70,12 +71,14 @@ var Shira;
                     .insertAfter(this.element)[0]
                 ;
 
-                // add classes and styles
-                $(this.element)
-                    .css('position', 'fixed')
-                    .css('top', this.options.fixTop + 'px')
-                    .addClass(this.options.fixClass)
-                ;
+                // add class and styles
+                if (this.options.style) {
+                    $(this.element)
+                        .css('position', 'fixed')
+                        .css('top', this.options.fixTop + 'px')
+                    ;
+                }
+                $(this.element).addClass(this.options.fixClass);
             },
 
             /**
@@ -111,15 +114,20 @@ var Shira;
                 $(this.substitute).remove();
                 this.substitute = null;
                 
-                // remove classes and styles
+                // reset applied styles and remove class
+                var cssReset = {};
+                if (this.options.syncPosition) {
+                    cssReset.left = '';
+                }
+                if (this.options.syncSize) {
+                    cssReset.width = '';
+                }
+                if (this.options.style) {
+                    cssReset.position = '';
+                    cssReset.top = '';
+                }
                 $(this.element)
-                    .css({
-                        position: '',
-                        left: '',
-                        top: '',
-                        width: '',
-                        height: ''
-                    })
+                    .css(cssReset)
                     .removeClass(this.options.fixClass)
                 ;
             },
