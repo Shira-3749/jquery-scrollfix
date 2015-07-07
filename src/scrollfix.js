@@ -79,6 +79,10 @@ var Shira;
                     ;
                 }
                 $(this.element).addClass(this.options.fixClass);
+                // callback
+                if (null !== this.options.onUpdateFixed) {
+                    this.options.onUpdateFixed(this);
+                }
             },
 
             /**
@@ -99,11 +103,6 @@ var Shira;
 
                     $(this.element).css('left', (substituteLeftOffset - currentScrollLeft) + 'px');
                 }
-
-                // callback
-                if (null !== this.options.onUpdateFixed) {
-                    this.options.onUpdateFixed(this);
-                }
             },
 
             /**
@@ -113,7 +112,7 @@ var Shira;
                 // remove the substitute
                 $(this.substitute).remove();
                 this.substitute = null;
-                
+
                 // reset applied styles and remove class
                 var cssReset = {};
                 if (this.options.syncPosition) {
@@ -130,6 +129,10 @@ var Shira;
                     .css(cssReset)
                     .removeClass(this.options.fixClass)
                 ;
+                // callback
+                if (null !== this.options.onUpdateFixed) {
+                    this.options.onUpdateFixed(this);
+                }
             },
 
             /**
@@ -181,7 +184,6 @@ var Shira;
                     if (currentScroll <= this.getElementY(this.substitute) + this.options.unfixOffset) {
                         this.unfix();
                         this.fixed = false;
-                    } else {
                         this.updateFixed();
                     }
                 } else {
