@@ -184,6 +184,7 @@ var Shira;
                     if (currentScroll <= this.getElementY(this.substitute) + this.options.unfixOffset) {
                         this.unfix();
                         this.fixed = false;
+                    } else {
                         this.updateFixed();
                     }
                 } else {
