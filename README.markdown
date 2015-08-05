@@ -75,9 +75,9 @@ The plugin provides a single jQuery method you can use:
             <td>Apply <code>position: fixed</code> and <code>top: ..px</code> directly to the element when it is fixed. Disable this if you wish to style the element through your own CSS rules using the <strong>fixClass</strong> (example: <code>#myElement.scroll-fix {position: fixed;}</code>).</td>
         </tr>
         <tr>
-            <th>onUpdateFixed<br><small>(deprecated - use DOM events instead)</small></th>
+            <th><del>onUpdateFixed</del></th>
             <td>null</td>
-            <td>Custom function to call when the fixed element is updated. The function is passed an instance of <code>Shira.ScrollFix.Watcher</code>.</td>
+            <td>Custom function to call when the fixed element is updated. The function is passed an instance of <code>Shira.ScrollFix.Watcher</code>.<br><br>This option is deprecated. Use DOM events instead.</td>
         </tr>
     </tbody>
 </table>
