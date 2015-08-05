@@ -12,6 +12,8 @@ var Shira;
         ScrollFix.Watcher = function (element, options) {
             this.element = element;
             this.options = $.extend({}, ScrollFix.Watcher.defaults, options);
+
+            $(element).data('shira.scrollfix', this);
         };
 
         ScrollFix.Watcher.defaults = {
@@ -35,6 +37,8 @@ var Shira;
             /**
              * Get absolute X position of the given element
              *
+             * @private
+             *
              * @param {HTMLElement} elem
              * @returns {Number}
              */
@@ -48,6 +52,8 @@ var Shira;
 
             /**
              * Get absolute Y position of the given element
+             *
+             * @private
              *
              * @param {HTMLElement} elem
              * @returns {Number}
@@ -64,25 +70,35 @@ var Shira;
              * Fix the element
              */
             fix: function () {
-                // create the substitute
-                this.substitute = $(this.element.cloneNode(false))
-                    .css('visibility', 'hidden')
-                    .height($(this.element).height())
-                    .insertAfter(this.element)[0]
-                ;
-
-                // add class and styles
-                if (this.options.style) {
-                    $(this.element)
-                        .css('position', 'fixed')
-                        .css('top', this.options.fixTop + 'px')
+                if (!this.fixed) {
+                    // create the substitute
+                    this.substitute = $(this.element.cloneNode(false))
+                        .css('visibility', 'hidden')
+                        .height($(this.element).height())
+                        .insertAfter(this.element)[0]
                     ;
+
+                    // add class and styles
+                    if (this.options.style) {
+                        $(this.element)
+                            .css('position', 'fixed')
+                            .css('top', this.options.fixTop + 'px')
+                        ;
+                    }
+                    $(this.element).addClass(this.options.fixClass);
+                    
+                    // update state
+                    this.fixed = true;
+
+                    // dispatch event
+                    this.dispatchEvent('fixed');
                 }
-                $(this.element).addClass(this.options.fixClass);
             },
 
             /**
              * Update the fixed element
+             *
+             * @private
              */
             updateFixed: function () {
                 // size
@@ -100,75 +116,84 @@ var Shira;
                     $(this.element).css('left', (substituteLeftOffset - currentScrollLeft) + 'px');
                 }
 
-                // callback
+                // callback (deprecated)
                 if (null !== this.options.onUpdateFixed) {
                     this.options.onUpdateFixed(this);
                 }
+
+                // dispatch event
+                this.dispatchEvent('update');
             },
 
             /**
              * Unfix the element
              */
             unfix: function () {
-                // remove the substitute
-                $(this.substitute).remove();
-                this.substitute = null;
-                
-                // reset applied styles and remove class
-                var cssReset = {};
-                if (this.options.syncPosition) {
-                    cssReset.left = '';
+                if (this.fixed) {
+                    // remove the substitute
+                    $(this.substitute).remove();
+                    this.substitute = null;
+
+                    // reset applied styles and remove class
+                    var cssReset = {};
+                    if (this.options.syncPosition) {
+                        cssReset.left = '';
+                    }
+                    if (this.options.syncSize) {
+                        cssReset.width = '';
+                    }
+                    if (this.options.style) {
+                        cssReset.position = '';
+                        cssReset.top = '';
+                    }
+                    $(this.element)
+                        .css(cssReset)
+                        .removeClass(this.options.fixClass)
+                    ;
+                    
+                    // update state
+                    this.fixed = false;
+
+                    // dispatch event
+                    this.dispatchEvent('unfixed');
                 }
-                if (this.options.syncSize) {
-                    cssReset.width = '';
-                }
-                if (this.options.style) {
-                    cssReset.position = '';
-                    cssReset.top = '';
-                }
-                $(this.element)
-                    .css(cssReset)
-                    .removeClass(this.options.fixClass)
-                ;
             },
 
             /**
              * Attach the watcher
              */
             attach: function () {
-                if (this.attached) {
-                    throw new Error('Already attached');
+                if (!this.attached) {
+                    var that = this;
+
+                    this.updateEventHandler = function () {
+                        that.pulse();
+                    };
+
+                    $(window)
+                        .scroll(this.updateEventHandler)
+                        .resize(this.updateEventHandler)
+                    ;
+
+                    this.attached = true;
+                    this.pulse();
                 }
-
-                var that = this;
-
-                this.updateEventHandler = function () {
-                    that.pulse();
-                };
-
-                $(window)
-                    .scroll(this.updateEventHandler)
-                    .resize(this.updateEventHandler)
-                ;
-
-                this.attached = true;
-                this.pulse();
             },
 
             /**
              * Detach the watcher
              */
             detach: function () {
-                if (!this.attached) {
-                    throw new Error('Not attached');
+                if (this.attached) {
+                    this.unfix();
+
+                    $(window)
+                        .unbind('scroll', this.updateEventHandler)
+                        .unbind('resize', this.updateEventHandler)
+                    ;
+
+                    this.attached = false;
                 }
-
-                $(window)
-                    .unbind('scroll', this.updateEventHandler)
-                    .unbind('resize', this.updateEventHandler)
-                ;
-
-                this.attached = false;
             },
 
             /**
@@ -178,19 +203,41 @@ var Shira;
                 var currentScroll = $(window).scrollTop();
 
                 if (this.fixed) {
-                    if (currentScroll <= this.getElementY(this.substitute) + this.options.unfixOffset) {
+                    if (
+                        currentScroll <= this.getElementY(this.substitute) + this.options.unfixOffset
+                        && !this.dispatchEvent('unfix').isDefaultPrevented()
+                    ) {
                         this.unfix();
-                        this.fixed = false;
                     } else {
                         this.updateFixed();
                     }
                 } else {
-                    if (currentScroll >= this.getElementY(this.element) + this.options.fixOffset) {
+                    if (
+                        currentScroll >= this.getElementY(this.element) + this.options.fixOffset
+                        && !this.dispatchEvent('fix').isDefaultPrevented()
+                    ) {
                         this.fix();
-                        this.fixed = true;
                         this.updateFixed();
                     }
                 }
+            },
+
+            /**
+             * Dispatch an event
+             *
+             * @private
+             *
+             * @param {String} type
+             * @returns {jQuery.Event}
+             */
+            dispatchEvent: function (type) {
+                var event = new $.Event(type + '.shira.scrollfix', {
+                    watcher: this
+                });
+
+                $(this.element).trigger(event);
+
+                return event;
             }
         };
 
@@ -200,19 +247,14 @@ var Shira;
          * Attach a watcher to the matched element
          *
          * @param {Object} options watcher option map
-         * @returns {ScrollFix.Watcher|Boolean} false if no element was matched
+         * @returns {jQuery}
          */
         $.fn.scrollFix = function (options) {
-            var element = this[0];
-
-            if (element) {
-                var watcher = new ScrollFix.Watcher(element, options);
-                watcher.attach();
-
-                return watcher;
+            if (this.length > 0) {
+                new ScrollFix.Watcher(this[0], options).attach();
             }
 
-            return false;
+            return this;
         };
     })(Shira.ScrollFix || (Shira.ScrollFix = {}));
 })(Shira || (Shira = {}), jQuery);
