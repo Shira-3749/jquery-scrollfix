@@ -13,18 +13,36 @@ var Shira;
             this.element = element;
             this.options = $.extend({}, ScrollFix.Watcher.defaults, options);
 
+            // set fix & unfix offset defaults based on positions
+            if (this.options.topFixOffset === null) {
+                this.options.topFixOffset = -this.options.topPosition;
+            }
+            if (this.options.topUnfixOffset === null) {
+                this.options.topUnfixOffset = this.options.topPosition;
+            }
+            if (this.options.bottomFixOffset === null) {
+                this.options.bottomFixOffset = -this.options.bottomPosition;
+            }
+            if (this.options.bottomUnfixOffset === null) {
+                this.options.bottomUnfixOffset = this.options.bottomPosition;
+            }
+
             $(element).data('shira.scrollfix', this);
         };
 
         ScrollFix.Watcher.defaults = {
-            fixClass: 'scroll-fix',
-            fixTop: 0,
-            fixOffset: 0,
-            unfixOffset: 0,
-            onUpdateFixed: null,
+            topFixClass: 'scrollfix-top',
+            bottomFixClass: 'scrollfix-bottom',
+            topPosition: 0,
+            bottomPosition: 0,
+            topFixOffset: null,
+            topUnfixOffset: null,
+            bottomFixOffset: null,
+            bottomUnfixOffset: null,
             syncSize: true,
             syncPosition: true,
-            style: true
+            style: true,
+            side: 'top'
         };
 
         ScrollFix.Watcher.prototype = {
@@ -32,7 +50,10 @@ var Shira;
             substitute: null,
             options: null,
             fixed: false,
+            fixedAt: null,
             attached: false,
+            checkTop: false,
+            checkBottom: false,
 
             /**
              * Get absolute X position of the given element
@@ -68,27 +89,43 @@ var Shira;
 
             /**
              * Fix the element
+             *
+             * @param {String} side top or bottom
              */
-            fix: function () {
+            fix: function (side) {
                 if (!this.fixed) {
+                    // dispatch event
+                    if (this.dispatchEvent('fix').isDefaultPrevented()) {
+                        return;
+                    }
+
+                    var $element = $(this.element);
+
                     // create the substitute
                     this.substitute = $(this.element.cloneNode(false))
                         .css('visibility', 'hidden')
                         .height($(this.element).height())
-                        .insertAfter(this.element)[0]
-                    ;
+                        .insertAfter(this.element)[0];
 
-                    // add class and styles
+                    // set styles
                     if (this.options.style) {
-                        $(this.element)
-                            .css('position', 'fixed')
-                            .css('top', this.options.fixTop + 'px')
-                        ;
+                        var styles = {position: 'fixed'};
+
+                        if (side === 'top') {
+                            styles.top = this.options.topPosition + 'px';
+                        } else {
+                            styles.bottom = this.options.bottomPosition + 'px';
+                        }
+
+                        $element.css(styles);
                     }
-                    $(this.element).addClass(this.options.fixClass);
+
+                    // add class
+                    $element.addClass(side === 'top' ? this.options.topFixClass : this.options.bottomFixClass);
                     
                     // update state
                     this.fixed = true;
+                    this.fixedAt = side;
 
                     // dispatch event
                     this.dispatchEvent('fixed');
@@ -103,9 +140,7 @@ var Shira;
             updateFixed: function () {
                 // size
                 if (this.options.syncSize) {
-                    $(this.element)
-                        .width($(this.substitute).width())
-                    ;
+                    $(this.element).width($(this.substitute).width());
                 }
 
                 // position
@@ -114,11 +149,6 @@ var Shira;
                     var substituteLeftOffset = this.getElementX(this.substitute);
 
                     $(this.element).css('left', (substituteLeftOffset - currentScrollLeft) + 'px');
-                }
-
-                // callback (deprecated)
-                if (null !== this.options.onUpdateFixed) {
-                    this.options.onUpdateFixed(this);
                 }
 
                 // dispatch event
@@ -130,6 +160,11 @@ var Shira;
              */
             unfix: function () {
                 if (this.fixed) {
+                    // dispatch event
+                    if (this.dispatchEvent('unfix').isDefaultPrevented()) {
+                        return;
+                    }
+
                     // remove the substitute
                     $(this.substitute).remove();
                     this.substitute = null;
@@ -144,15 +179,16 @@ var Shira;
                     }
                     if (this.options.style) {
                         cssReset.position = '';
-                        cssReset.top = '';
+                        cssReset[this.fixedAt] = '';
+
                     }
                     $(this.element)
                         .css(cssReset)
-                        .removeClass(this.options.fixClass)
-                    ;
+                        .removeClass(this.fixedAt === 'top' ? this.options.topFixClass : this.options.bottomFixClass);
                     
                     // update state
                     this.fixed = false;
+                    this.fixedAt = null;
 
                     // dispatch event
                     this.dispatchEvent('unfixed');
@@ -172,8 +208,7 @@ var Shira;
 
                     $(window)
                         .scroll(this.updateEventHandler)
-                        .resize(this.updateEventHandler)
-                    ;
+                        .resize(this.updateEventHandler);
 
                     this.attached = true;
                     this.pulse();
@@ -189,8 +224,7 @@ var Shira;
 
                     $(window)
                         .unbind('scroll', this.updateEventHandler)
-                        .unbind('resize', this.updateEventHandler)
-                    ;
+                        .unbind('resize', this.updateEventHandler);
 
                     this.attached = false;
                 }
@@ -200,25 +234,36 @@ var Shira;
              * Pulse the watcher
              */
             pulse: function () {
-                var currentScroll = $(window).scrollTop();
+                var $window = $(window);
+                var currentScrollTop = $window.scrollTop();
+                var currentScrollBottom = currentScrollTop + $window.height();
+
+                var elementToCheck = this.fixed ? this.substitute : this.element;
+                var elementTop = this.getElementY(elementToCheck);
+                var elementBottom = elementTop + $(elementToCheck).outerHeight();
 
                 if (this.fixed) {
-                    if (
-                        currentScroll <= this.getElementY(this.substitute) + this.options.unfixOffset
-                        && !this.dispatchEvent('unfix').isDefaultPrevented()
-                    ) {
+                    if (this.fixedAt === 'top') {
+                        if (currentScrollTop <= elementTop - this.options.topUnfixOffset) {
+                            this.unfix();
+                        }
+                    } else if (currentScrollBottom >= elementBottom + this.options.bottomUnfixOffset) {
                         this.unfix();
-                    } else {
-                        this.updateFixed();
                     }
-                } else {
-                    if (
-                        currentScroll >= this.getElementY(this.element) + this.options.fixOffset
-                        && !this.dispatchEvent('fix').isDefaultPrevented()
-                    ) {
-                        this.fix();
-                        this.updateFixed();
-                    }
+                } else if (
+                    (this.options.side === 'top' || this.options.side === 'both')
+                    && currentScrollTop > elementTop + this.options.topFixOffset
+                ) {
+                    this.fix('top');
+                } else if (
+                    (this.options.side === 'bottom' || this.options.side === 'both')
+                    && currentScrollBottom < elementBottom - this.options.bottomFixOffset
+                ) {
+                    this.fix('bottom');
+                }
+
+                if (this.fixed) {
+                    this.updateFixed();
                 }
             },
 
@@ -250,8 +295,8 @@ var Shira;
          * @returns {jQuery}
          */
         $.fn.scrollFix = function (options) {
-            if (this.length > 0) {
-                new ScrollFix.Watcher(this[0], options).attach();
+            for (var i = 0; i < this.length; ++i) {
+                new ScrollFix.Watcher(this[i], options).attach();
             }
 
             return this;
