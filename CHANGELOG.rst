@@ -1,14 +1,14 @@
 Changelog
 #########
 
-Unreleased
-**********
+3.0.0
+*****
 
-- support for fixing to the bottom side of the screen
-- support for fixing to both sides of the screen
+- support for fixing to the bottom side of the window
+- support for fixing to both sides of the window
 - support calling ``$(...).scrollFix()`` on multiple elements
 - removed the deprecated ``onUpdateFixed`` option
-- improved option names and defaults
+- improved option names and defaults, new options
 
 
 2.1.0
