@@ -33,6 +33,7 @@ var Shira;
         ScrollFix.Watcher.defaults = {
             topFixClass: 'scrollfix-top',
             bottomFixClass: 'scrollfix-bottom',
+            substituteClass: 'scrollfix-subtitute',
             topPosition: 0,
             bottomPosition: 0,
             topFixOffset: null,
@@ -42,6 +43,7 @@ var Shira;
             syncSize: true,
             syncPosition: true,
             style: true,
+            styleSubstitute: true,
             side: 'top'
         };
 
@@ -102,10 +104,16 @@ var Shira;
                     var $element = $(this.element);
 
                     // create the substitute
-                    this.substitute = $(this.element.cloneNode(false))
-                        .css('visibility', 'hidden')
-                        .height($(this.element).height())
-                        .insertAfter(this.element)[0];
+                    var $substitute = $(this.element.cloneNode(false))
+                        .addClass(this.options.substituteClass);
+
+                    if (this.options.styleSubstitute) {
+                        $substitute
+                            .css('visibility', 'hidden')
+                            .height($(this.element).height());
+                    }
+
+                    this.substitute = $substitute.insertAfter(this.element)[0];
 
                     // set styles
                     if (this.options.style) {
