@@ -1,6 +1,6 @@
 {
     "name": "jquery-scrollfix",
-    "description": "jQuery plugin for making an element fixed when it goes out of view.",
+    "description": "jQuery plugin for making an element fixed when it goes out of view",
     "license": "MIT",
     "keywords": ["jquery", "scroll", "fix", "fixed", "position"],
     "main": [

@@ -1,6 +1,12 @@
 Changelog
 #########
 
+3.0.1
+*****
+
+- fix substitute element height for elements that use box-sizing: border-box (jfcherng)
+
+
 3.0.0
 *****
 
