@@ -1,6 +1,12 @@
 Changelog
 #########
 
+3.0.2
+*****
+
+- specified ``main`` in ``package.json`` for ease of use
+
+
 3.0.1
 *****
 
