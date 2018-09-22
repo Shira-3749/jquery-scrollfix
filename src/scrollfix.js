@@ -110,7 +110,7 @@ var Shira;
                     if (this.options.styleSubstitute) {
                         $substitute
                             .css('visibility', 'hidden')
-                            .height($(this.element).height());
+                            .height($element.css('box-sizing') === 'border-box' ? $element.outerHeight() : $element.height());
                     }
 
                     this.substitute = $substitute.insertAfter(this.element)[0];
@@ -130,7 +130,7 @@ var Shira;
 
                     // add class
                     $element.addClass(side === 'top' ? this.options.topFixClass : this.options.bottomFixClass);
-                    
+
                     // update state
                     this.fixed = true;
                     this.fixedAt = side;
@@ -193,7 +193,7 @@ var Shira;
                     $(this.element)
                         .css(cssReset)
                         .removeClass(this.fixedAt === 'top' ? this.options.topFixClass : this.options.bottomFixClass);
-                    
+
                     // update state
                     this.fixed = false;
                     this.fixedAt = null;
