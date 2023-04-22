@@ -3,7 +3,11 @@ ScrollFix
 
 jQuery plugin for making an element fixed when it goes out of view.
 
-`Online demo (latest version) <http://htmlpreview.github.io/?http://github.com/ShiraNai7/jquery-scrollfix/blob/master/demo.html>`_
+`Online demo (latest version) <https://raw.githack.com/Shira-3749/jquery-scrollfix/master/demo.html>`_
+
+.. HINT::
+
+   Similar behavior can now be achieved without JavaScript by using `CSS position: sticky <https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky>`_.
 
 .. contents::
    :depth: 2
@@ -50,7 +54,7 @@ The plugin provides a single jQuery method:
 
    When the element is fixed, an invisible substitute (shallow clone) of it will occupy the original
    location. This helps with size and position synchronization and prevents the page from jumping.
-   
+
    The element should not have an ``id`` attribute. If it does, there will be multiple elements
    with the same ID and that might break your scripts.
 
@@ -86,7 +90,7 @@ Option              Default                   Description
 ------------------- ------------------------- ---------------------------------------------------------
 ``styleSubstitute`` ``true``                  Use inline styles to set visibility and height of the
                                               substitute when it's created.
-                                              
+
                                               If you disable this, you'll have to apply these styles
                                               yourself. The substitute will have the
                                               ``substituteClass`` class.
@@ -125,7 +129,7 @@ Option                Default             Description
 .. HINT::
 
    Positive offsets result in fixing or unfixing after the element has been reached by the window boundary.
-   
+
    Negative offsets result in fixing or unfixing before the element is reached by the window boundary.
 
 
@@ -137,7 +141,7 @@ List of dom events dispatched from the element:
 - ``fix.shira.scrollfix``
 
   - fired before the element is fixed; calling ``e.preventDefault()`` will prevent fixing
- 
+
 - ``fixed.shira.scrollfix``
 
   - fired after the element has been fixed
@@ -154,5 +158,5 @@ List of dom events dispatched from the element:
 
   - fired after the element has been unfixed
 
-All of the event objects have a property called ``watcher`` that contains an instance of 
+All of the event objects have a property called ``watcher`` that contains an instance of
 ``Shira.ScrollFix.Watcher``.
