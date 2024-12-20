@@ -3,13 +3,13 @@ ScrollFix
 
 .. WARNING::
 
-   This library is no longer maintained. You should probably use `CSS position: sticky <https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky>`_ instead.
+   This library is no longer actively maintained. You should probably use `CSS position: sticky <https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky>`_ instead.
 
 ----
 
 jQuery plugin for making an element fixed when it goes out of view.
 
-`Online demo (latest version) <https://raw.githack.com/Shira-3749/jquery-scrollfix/master/demo.html>`_
+`Online demo (latest version) <https://raw.githack.com/shira-374/jquery-scrollfix/master/demo.html>`_
 
 .. contents::
    :depth: 2
